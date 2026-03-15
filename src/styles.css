@@ -186,6 +186,41 @@
   line-height: 1.8;
 }
 
+.go-toplist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 200px;
+  counter-reset: toplist;
+}
+
+.go-toplist li {
+  counter-increment: toplist;
+  font-size: clamp(7px, 1.2dvh, 10px);
+  line-height: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 1ch;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+}
+
+.go-toplist li::before {
+  content: counter(toplist) ".";
+  color: #ff4081;
+  min-width: 2ch;
+}
+
+.go-toplist-new {
+  color: #ffd740;
+  text-shadow: 0 0 8px #ffd740;
+}
+
+.go-toplist-date {
+  color: rgba(0, 229, 255, 0.5);
+  font-size: 0.85em;
+}
+
 /* ── Pause overlay ───────────────────────────────── */
 .pause-overlay {
   position: absolute;

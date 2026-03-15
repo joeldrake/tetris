@@ -50,7 +50,7 @@ class Tetris extends HTMLElement {
           <div id="gameover-overlay" class="gameover-overlay">
             <p class="go-title">GAME OVER</p>
             <p id="go-score"></p>
-            <p id="go-highscore"></p>
+            <ol id="go-toplist" class="go-toplist"></ol>
           </div>
         </div>
         <div class="foot">
@@ -81,34 +81,44 @@ class Tetris extends HTMLElement {
     const scoreEl = shadow.getElementById('score')!;
     const gameoverOverlay = shadow.getElementById('gameover-overlay')!;
     const goScoreEl = shadow.getElementById('go-score')!;
-    const goHighscoreEl = shadow.getElementById('go-highscore')!;
+;
 
-    const HS_KEY = 'tetris-highscore';
+    const HS_KEY = 'tetris-highscore-v2';
     type HighScore = { score: number; date: string };
 
-    function getHighScore(): HighScore | null {
+    function getTopList(): HighScore[] {
       const raw = localStorage.getItem(HS_KEY);
-      return raw ? JSON.parse(raw) : null;
+      return raw ? JSON.parse(raw) : [];
     }
+
+    function saveTopList(list: HighScore[]) {
+      localStorage.setItem(HS_KEY, JSON.stringify(list));
+    }
+
+    const goToplistEl = shadow.getElementById('go-toplist')!;
 
     emitter.on('stateChanged', (state: GameState) => {
       renderer.render(state);
-      console.log('scoreEl', scoreEl);
-      console.log('state.score', state.score);
       scoreEl.textContent = String(state.score);
       startBtn.textContent = 'RESET';
       pauseBtn.textContent = state.paused ? '▶' : '⏸';
     });
 
     emitter.on('gameOver', ({ score }: { score: number }) => {
-      const hs = getHighScore();
-      const isNew = !hs || score > hs.score;
-      if (isNew) {
-        localStorage.setItem(HS_KEY, JSON.stringify({ score, date: new Date().toLocaleDateString('sv-SE') }));
-      }
-      const current = isNew ? { score, date: new Date().toLocaleDateString('sv-SE') } : hs!;
-      goScoreEl.textContent = `POÄNG: ${score}`;
-      goHighscoreEl.textContent = `HIGHSCORE: ${current.score}${isNew ? ' ★' : ` (${current.date})`}`;
+      const list = getTopList();
+      const entry: HighScore = { score, date: new Date().toLocaleDateString('sv-SE') };
+      list.push(entry);
+      list.sort((a, b) => b.score - a.score);
+      const top10 = list.slice(0, 10);
+      saveTopList(top10);
+
+      const rank = top10.findIndex((e) => e === entry) + 1;
+      goScoreEl.textContent = rank > 0 ? `POÄNG: ${score} (#${rank})` : `POÄNG: ${score}`;
+
+      goToplistEl.innerHTML = top10
+        .map((e) => `<li class="${e === entry ? 'go-toplist-new' : ''}">${e.score} <span class="go-toplist-date">${e.date}</span></li>`)
+        .join('');
+
       gameoverOverlay.classList.add('visible');
     });
 
