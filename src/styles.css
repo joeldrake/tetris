@@ -1,0 +1,82 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+body {
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+.board-wrapper {
+  max-width: 400px;
+}
+
+/* ── Board container ─────────────────────────────── */
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  position: relative;
+  background: #07071a;
+  gap: 1px;
+}
+
+/* ── Board cells ─────────────────────────────────── */
+.cell {
+  aspect-ratio: 1;
+}
+
+.cell.filled {
+  background: var(--color);
+  box-shadow:
+    0 0 8px var(--color),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.2),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.cell.ghost {
+  opacity: 0.32;
+  outline: 1.5px solid var(--color);
+}
+
+/* ── Pause overlay ───────────────────────────────── */
+.pause-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(7, 7, 26, 0.8);
+  color: #00e5ff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  text-shadow: 0 0 16px #00e5ff;
+}
+
+.pause-overlay.visible {
+  display: flex;
+}
+
+/* ── Next-piece container ────────────────────────── */
+.next {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: black;
+  gap: 1px;
+}
+
+/* ── Next-piece cells ────────────────────────────── */
+.ncell {
+  aspect-ratio: 1;
+}
+
+.ncell.filled {
+  background: var(--color);
+  box-shadow:
+    0 0 8px var(--color),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.2),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.3);
+}
