@@ -29,10 +29,26 @@ class Tetris extends HTMLElement {
     // ── HTML structure ────────────────────────────
     shadow.innerHTML = `
       <style>${styles}</style>
-      <button id="btn-start">Start</button>
-      <div class="game-wrapper">
-        <div id="next"></div>
+
+      <div class="board-wrapper">
+        <div class="head">
+          <button id="btn-start">Start</button>
+          <div class="next-wrapper">
+            <div id="next"></div>
+          </div>
+        </div>
         <div id="board"></div>
+        <div class="foot">
+          <button class="ctrl-btn ctrl-drop" id="btn-drop">▼▼</button>
+          <div class="ctrl-dpad">
+            <button class="ctrl-btn" id="btn-rotate">↑</button>
+            <div class="ctrl-row">
+              <button class="ctrl-btn" id="btn-left">←</button>
+              <button class="ctrl-btn" id="btn-right">→</button>
+            </div>
+          </div>
+
+        </div>
       </div>
     `;
 
@@ -53,6 +69,24 @@ class Tetris extends HTMLElement {
     });
 
     shadow.getElementById('btn-start')!.addEventListener('click', () => engine.start());
+
+    // ── Touch / mobile buttons ───────────────────
+    const mobileButtons: Array<[string, string]> = [
+      ['btn-left', 'left'],
+      ['btn-right', 'right'],
+      ['btn-rotate', 'rotate'],
+      ['btn-drop', 'drop'],
+    ];
+    for (const [id, action] of mobileButtons) {
+      shadow.getElementById(id)!.addEventListener(
+        'touchstart',
+        (e) => {
+          e.preventDefault();
+          engine.input(action as Parameters<typeof engine.input>[0]);
+        },
+        { passive: false }
+      );
+    }
 
     // ── Keyboard input ───────────────────────────
     const KEY_MAP: Record<string, string> = {

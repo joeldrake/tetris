@@ -42,7 +42,7 @@ export class Renderer {
 
     nextEl.classList.add('next');
 
-    this.#nextCells = Array.from({ length: 4 * 4 }, () => {
+    this.#nextCells = Array.from({ length: 4 * 2 }, () => {
       const el = document.createElement('div');
       el.classList.add('ncell');
       nextEl.appendChild(el);
