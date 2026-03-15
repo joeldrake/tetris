@@ -109,7 +109,8 @@ export class TetrisEngine {
   }
 
   #gravity(): void {
-    this.#lock();
+    if (this.#move(0, 1)) {
+    } else this.#lock();
     this.#emit();
   }
 
@@ -142,6 +143,7 @@ export class TetrisEngine {
   }
 
   #drop(): void {
+    while (this.#move(0, 1)) {}
     this.#lock();
     this.#emit();
   }
