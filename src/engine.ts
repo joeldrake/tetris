@@ -109,7 +109,8 @@ export class TetrisEngine {
   }
 
   #gravity(): void {
-    if (!this.#move(0, 1)) this.#lock();
+    if (this.#move(0, 1)) {}
+    else this.#lock();
     this.#emit();
   }
 
